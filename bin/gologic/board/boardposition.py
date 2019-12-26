@@ -87,12 +87,11 @@ class BoardPosition:
 
 
 StartConditions = namedtuple('StartConditions', ['value', 'position'])
+
 Conditions = namedtuple('Conditions', ['adjacent', 'stop_before', 'stop_after'])
 
 
 class ChainProcess:
-
-    State = namedtuple('State', ['value', 'position', 'visited', 'to_visit'])
 
     def __init__(self, start_cond: StartConditions, conditions: Conditions, step):
         self.__init_state(start_cond)
