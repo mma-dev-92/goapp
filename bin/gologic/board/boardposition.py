@@ -2,6 +2,7 @@ from __future__ import annotations
 from itertools import product
 from collections import namedtuple
 from pprint import pprint
+from typing import TypeVar, Callable, Tuple
 
 from .field import Field, EmptyField, NonEmptyField
 
@@ -44,6 +45,22 @@ class BoardPosition:
         self.__typecheck(against=other)
         return self.__board_mask == other.__board_mask
 
+    T = TypeVar('T')
+
+    def bind(self, f: Callable[[T, Tuple[int, int]], T], e: T, start_coord: Tuple[int, int], stop_before: Callable[[
+             Tuple[int, int]], bool] = lambda x: False, stop_after: Callable[[Tuple[int, int]], bool] = lambda x: False) -> T:
+        to_visit, result = [start_coord], e
+        visited = {coord: False for coord in self.coords}
+        while to_visit:
+            v = to_visit.pop()
+            visited[v] = True
+            if not stop_before(v):
+                result = f(result, v)
+                if not stop_after(v):
+                    vrtcs_to_add = [nv for nv in self.neighbours(v) if not visited[nv] and not nv in to_visit]
+                    to_visit.extend(vrtcs_to_add)
+        return result
+
     def liberties(self, coord):
         pass
 
@@ -84,41 +101,3 @@ class BoardPosition:
             raise TypeError("size must be an int")
         if size not in self.__VALID_SIZES:
             raise ValueError("size must be one of {}".format(self.__VALID_SIZES))
-
-
-StartConditions = namedtuple('StartConditions', ['value', 'position'])
-
-Conditions = namedtuple('Conditions', ['adjacent', 'stop_before', 'stop_after'])
-
-
-class ChainProcess:
-
-    def __init__(self, start_cond: StartConditions, conditions: Conditions, step):
-        self.__init_state(start_cond)
-        self.__conditions = conditions
-        self.__step = step
-
-    def run(self):
-        while self.to_visit:
-            self.__process()
-        return self.value
-
-    def __init_state(self, start_cond):
-        self.value = start_cond.value
-        self.visited = dict()
-        self.to_visit = [start_cond.position]
-
-    def __process(self):
-        coord = self.to_visit.pop()
-        if not self.__conditions.stop_before(coord):
-            self.__process_cord(coord)
-            if not self.__conditions.stop_after(coord):
-                self.to_visit.extend(self.__adjacent_coords(coord))
-
-    def __process_cord(self, coord):
-        self.visited[coord] = True
-        self.value = self.__step(self.value, coord)
-
-    def __adjacent_coords(self, coord):
-        return [nv for nv in self.__conditions.adjacent(
-            coord) if nv not in self.visited and nv not in self.to_visit]

@@ -22,9 +22,6 @@ class BaseTestCaseClass(unittest.TestCase):
             self.fail("{} raised exception {} with parameters {}".format(
                 function.__name__, error, kwargs_to_str(**params)))
 
-    def __kwargs_to_str(self, **kwargs):
-        return ' '.join(['{}={}'.format(param, kwargs[param]) for param in kwargs])
-
     def random_size_empty_board(self):
         return choice(self.boards)
 
