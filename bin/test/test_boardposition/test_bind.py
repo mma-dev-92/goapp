@@ -3,6 +3,8 @@ from random import randrange, randint
 from .base import BaseTestCaseClass
 
 
+# TODO: refactor it... it is ugly...
+
 class TestChainProcess(BaseTestCaseClass):
     def test_count_empty_fields_on_empty_board(self):
         bp = self.random_size_empty_board()
@@ -26,6 +28,6 @@ class TestChainProcess(BaseTestCaseClass):
         bp = self.fill(bp, self.random_coords(bp.size, black=5, white=5))
 
         expected_result = sum(range(bp.size ** 2 - 10))
-        result = bp.bind(f=lambda val, coord: (val[0]+1, val[1]+val[0]) if bp.at(coord).is_empty()
+        result = bp.bind(f=lambda val, coord: (val[0] + 1, val[1] + val[0]) if bp.at(coord).is_empty()
                          else val, e=(0, 0), start_coord=(0, 0))
         self.assertEqual(expected_result, result[1])

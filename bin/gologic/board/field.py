@@ -10,9 +10,16 @@ class Field(ABC):
     def is_empty(self):
         pass
 
-    @abstractmethod
     def __eq__(self, other):
-        pass
+        if not isinstance(other, Field):
+            raise TypeError(
+                "can not compare {} to type {}".format(
+                    Field, type(other)))
+        if self.is_empty() and other.is_empty():
+            return True
+        elif not self.is_empty() == other.is_empty():
+            return False
+        return self.color == other.color
 
     @abstractmethod
     def is_black(self):
@@ -46,16 +53,6 @@ class NonEmptyField(Field):
     def __str__(self):
         return self.color.name[0]
 
-    def __eq__(self, other):
-        if not isinstance(other, Field):
-            raise TypeError(
-                "can not compare {} to type {}".format(
-                    Field, type(other)))
-        if not self.is_empty() == other.is_empty():
-            raise ValueError(
-                "unable to campare {} and {} fields".format(type(self), type(other)))
-        return self.color == other.color
-
 
 class EmptyField(Field):
     def is_empty(self):
@@ -69,13 +66,3 @@ class EmptyField(Field):
 
     def is_black(self):
         return False
-
-    def __eq__(self, other):
-        if not isinstance(other, Field):
-            raise TypeError(
-                "can not compare {} to type {}".format(
-                    Field, type(other)))
-        if not self.is_empty() == other.is_empty():
-            raise ValueError(
-                "unable to campare {} and {} fields".format(type(self), type(other)))
-        return self.is_empty() == other.is_empty()

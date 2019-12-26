@@ -65,7 +65,10 @@ class BoardPosition:
         pass
 
     def group(self, coord):
-        pass
+        if self.at(coord).is_empty():
+            return []
+        return self.bind(f=lambda val, _coord: val + [_coord] if self.at(_coord) == self.at(coord) else val,
+                         e=[], start_coord=coord, stop_before=lambda _coord: not self.at(_coord) == self.at(coord))
 
     def neighbours(self, coord):
         row, col = coord
@@ -93,7 +96,7 @@ class BoardPosition:
             raise ValueError(
                 "BoardPosition coord must be a tuple with exactly two elements")
         if not coord in self.__board_mask:
-            print(coord)
+            pprint(self.size)
             raise IndexError("BoardPosition coord - index out of range")
 
     def __check_size(self, size):

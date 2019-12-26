@@ -17,34 +17,55 @@ class TestField(BaseTestCaseClass):
     def test__init__empty_field(self):
         self.do_test_for_no_exception_rising(EmptyField)
 
-    def test_eq(self):
-        non_empty_black_1 = NonEmptyField(color=Color.BLACK)
-        non_empty_black_2 = NonEmptyField(color=Color.BLACK)
-        non_empty_white_1 = NonEmptyField(color=Color.WHITE)
-        non_empty_white_2 = NonEmptyField(color=Color.WHITE)
+    def test_eq_two_black_fields(self):
+        self.assertEqual(self.__black_field(), self.__black_field())
 
-        self.assertTrue(non_empty_black_1 == non_empty_black_2)
-        self.assertTrue(non_empty_white_1 == non_empty_white_2)
+    def test_eq_two_white_fields(self):
+        self.assertEqual(self.__white_field(), self.__white_field())
 
-        self.assertFalse(non_empty_white_1 == non_empty_black_2)
+    def test_eq_two_empty_fields(self):
+        self.assertEqual(EmptyField(), EmptyField())
 
-        empty = EmptyField()
+    def test_empty_not_equal_nonempty(self):
+        self.assertNotEqual(EmptyField(), self.__white_field())
 
-        with self.assertRaises(ValueError):
-            empty == non_empty_black_2
+    def test_field_not_equal_none(self):
+        with self.assertRaises(TypeError):
+            EmptyField().__eq__(None)
 
-        for value in [1, 'maciek', {1: 1}]:
-            with self.assertRaises(TypeError):
-                empty == value
+    def test_field_not_equal_string(self):
+        with self.assertRaises(TypeError):
+            NonEmptyField(Color.BLACK) == 'field'
 
-    def test_is_empty(self):
-        non_empty_black = NonEmptyField(color=Color.BLACK)
-        non_empty_white = NonEmptyField(color=Color.WHITE)
-        empty = EmptyField()
+    def test_is_empty_on_nonempty(self):
+        self.assertFalse(self.__black_field().is_empty())
 
-        self.assertTrue(empty.is_empty())
-        self.assertFalse(non_empty_black.is_empty())
-        self.assertFalse(non_empty_white.is_empty())
+    def test_is_empty_on_empty(self):
+        self.assertTrue(EmptyField().is_empty())
+
+    def test_is_black_on_black(self):
+        self.assertTrue(self.__black_field().is_black())
+
+    def is_black_on_white(self):
+        self.assertFalse(self.__white_field().is_black())
+
+    def test_is_black_on_empty(self):
+        self.assertFalse(EmptyField().is_black())
+
+    def test_is_white_on_white(self):
+        self.assertTrue(self.__white_field().is_white())
+
+    def test_is_white_on_black(self):
+        self.assertFalse(self.__black_field().is_white())
+
+    def test_is_white_on_empty(self):
+        self.assertFalse(self.__black_field().is_white())
+
+    def __black_field(self):
+        return NonEmptyField(color=Color.BLACK)
+
+    def __white_field(self):
+        return NonEmptyField(color=Color.WHITE)
 
     def __test_if_class_is_abstract(self, to_test):
         with self.assertRaises(TypeError):
