@@ -1,10 +1,8 @@
 from __future__ import annotations
 from itertools import product
-from collections import namedtuple
-from pprint import pprint
 from typing import TypeVar, Callable, Tuple
 
-from .field import Field, EmptyField, NonEmptyField
+from gologic.board.field import Field, EmptyField, NonEmptyField
 
 
 class BoardPosition:
@@ -62,18 +60,42 @@ class BoardPosition:
         return result
 
     def liberties(self, coord):
-        pass
+        if self.at(coord).is_empty():
+            raise RuntimeError("Trying to count liberties of an empty field")
+
+        def f(val, _coord):
+            return val + 1 if self.at(_coord).is_empty() else val
+
+        def stop_before(_coord):
+            return not self.at(_coord).is_empty() and not self.at(coord).color == self.at(_coord).color
+
+        def stop_after(_coord):
+            return self.at(_coord).is_empty()
+
+        return self.bind(f=f, e=0, start_coord=coord, stop_before=stop_before, stop_after=stop_after)
 
     def group(self, coord):
         if self.at(coord).is_empty():
             return []
-        return self.bind(f=lambda val, _coord: val + [_coord] if self.at(_coord) == self.at(coord) else val,
-                         e=[], start_coord=coord, stop_before=lambda _coord: not self.at(_coord) == self.at(coord))
+
+        def f(val, _coord):
+            return val + [_coord] if self.at(_coord) == self.at(coord) else val
+
+        def stop_before(_coord):
+            return not self.at(_coord) == self.at(coord)
+
+        return self.bind(f=f, e=[], start_coord=coord, stop_before=stop_before)
 
     def neighbours(self, coord):
         row, col = coord
         return [(row + rt, col) for rt in self.__get_transl(row)] + \
             [(row, col + ct) for ct in self.__get_transl(col)]
+
+    def __str__(self):
+        return '\n'.join([self.__row_str(row) for row in range(self.size)])
+
+    def __row_str(self, row):
+        return ''.join([self.at((row, col)).color_print() for col in range(self.size)])
 
     def __get_transl(self, val):
         if val == 0:
@@ -96,7 +118,6 @@ class BoardPosition:
             raise ValueError(
                 "BoardPosition coord must be a tuple with exactly two elements")
         if not coord in self.__board_mask:
-            pprint(self.size)
             raise IndexError("BoardPosition coord - index out of range")
 
     def __check_size(self, size):

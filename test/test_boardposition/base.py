@@ -2,8 +2,8 @@ import unittest
 from itertools import product
 from random import choice, sample
 
-from ...gologic.board.color import Color
-from ...gologic.board.boardposition import BoardPosition
+from gologic.board.color import Color
+from gologic.board.boardposition import BoardPosition
 
 
 class BaseTestCaseClass(unittest.TestCase):
@@ -14,6 +14,10 @@ class BaseTestCaseClass(unittest.TestCase):
 
     def __all_valid_coords(self, size):
         return list(product(range(size), range(size)))
+
+    def error_msg(self, bp, input, result, expected_result):
+        return "\n\nError on board:\n{}\n{}\n{}\ninput: {}\noutput is: {}\nbut should be: {}".format(
+            bp.size * "-", bp, bp.size * "-", input, result, expected_result)
 
     def do_test_for_no_exception_rising(self, function, **params):
         try:

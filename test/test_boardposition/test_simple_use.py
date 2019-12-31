@@ -2,14 +2,11 @@ from itertools import product
 from random import choice
 
 from .base import BaseTestCaseClass
-from ...gologic.board.boardposition import BoardPosition
-from ...gologic.board.field import Color
+from gologic.board.boardposition import BoardPosition
+from gologic.board.field import Color
 
 
 class TestBoardPositionSimpleUse(BaseTestCaseClass):
-    def setUp(self):
-        super().setUp()
-
     def test__init__with_proper_size_value(self):
         self.do_test_for_no_exception_rising(BoardPosition, size=self.random_size())
 

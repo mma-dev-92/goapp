@@ -1,7 +1,7 @@
 import unittest
 
-from ..gologic.board.field import Field, EmptyField, NonEmptyField, Color
-from .test_boardposition.base import BaseTestCaseClass
+from gologic.board.field import Field, EmptyField, NonEmptyField, Color
+from test.test_boardposition.base import BaseTestCaseClass
 
 
 class TestField(BaseTestCaseClass):
