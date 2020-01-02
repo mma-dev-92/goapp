@@ -43,21 +43,19 @@ class BoardPosition:
         self.__typecheck(against=other)
         return self.__board_mask == other.__board_mask
 
-    T = TypeVar('T')
-
-    def bind(self, f: Callable[[T, Tuple[int, int]], T], e: T, start_coord: Tuple[int, int], stop_before: Callable[[
-             Tuple[int, int]], bool] = lambda x: False, stop_after: Callable[[Tuple[int, int]], bool] = lambda x: False) -> T:
-        to_visit, result = [start_coord], e
-        visited = {coord: False for coord in self.coords}
+    def bind(self, f, e, start_coord, stop_before=lambda x: False, stop_after=lambda x: False):
+        visited, to_visit, result = {coord: False for coord in self.coords}, set([start_coord]), e
         while to_visit:
             v = to_visit.pop()
-            visited[v] = True
             if not stop_before(v):
                 result = f(result, v)
                 if not stop_after(v):
-                    vrtcs_to_add = [nv for nv in self.neighbours(v) if not visited[nv] and not nv in to_visit]
-                    to_visit.extend(vrtcs_to_add)
+                    self.__add_neighbours(of=v, to=to_visit, exclude=visited)
+            visited[v] = True
         return result
+
+    def __add_neighbours(self, of, to, exclude):
+        to.update([nv for nv in self.neighbours(of) if not exclude[nv]])
 
     def liberties(self, coord):
         if self.at(coord).is_empty():
