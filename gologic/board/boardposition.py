@@ -91,12 +91,6 @@ class BoardPosition:
         return [(row + rt, col) for rt in self.__get_transl(row)] + \
             [(row, col + ct) for ct in self.__get_transl(col)]
 
-    def __str__(self):
-        return '\n'.join([self.__row_str(row) for row in range(self.size)])
-
-    def __row_str(self, row):
-        return ''.join([self.at((row, col)).color_print() for col in range(self.size)])
-
     def __get_transl(self, val):
         if val == 0:
             return (1,)

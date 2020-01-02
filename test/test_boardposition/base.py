@@ -1,6 +1,8 @@
 import unittest
+import colorama
 from itertools import product
 from random import choice, sample
+from termcolor import colored
 
 from gologic.board.color import Color
 from gologic.board.boardposition import BoardPosition
@@ -15,9 +17,25 @@ class BaseTestCaseClass(unittest.TestCase):
     def __all_valid_coords(self, size):
         return list(product(range(size), range(size)))
 
+    def print_position(self, bp):
+        return '\n'.join([self.print_bp_row(bp, row) for row in range(bp.size)])
+
+    def print_bp_row(self, bp, row):
+        return ''.join([self.print_field(bp.at((row, col))) for col in range(bp.size)])
+
+    def print_field(self, field):
+        return self.print_nonempty_field(field) if not field.is_empty() else self.print_empty_field()
+
+    def print_empty_field(self):
+        return colored('+', 'yellow', 'on_cyan', attrs=['blink'])
+
+    def print_nonempty_field(self, field):
+        return colored('o', 'grey', 'on_cyan', attrs=['blink']) if field.is_black() else colored(
+            'o', 'white', 'on_cyan', attrs=['blink'])
+
     def error_msg(self, bp, input, result, expected_result):
         return "\n\nError on board:\n{}\n{}\n{}\ninput: {}\noutput is: {}\nbut should be: {}".format(
-            bp.size * "-", bp, bp.size * "-", input, result, expected_result)
+            bp.size * "-", self.print_position(bp), bp.size * "-", input, result, expected_result)
 
     def do_test_for_no_exception_rising(self, function, **params):
         try:

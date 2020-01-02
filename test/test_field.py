@@ -61,6 +61,23 @@ class TestField(BaseTestCaseClass):
     def test_is_white_on_empty(self):
         self.assertFalse(self.__black_field().is_white())
 
+    def test_color_black_field(self):
+        self.assertTrue(self.__black_field().color == Color.BLACK)
+
+    def test_color_white_field(self):
+        self.assertTrue(self.__white_field().color == Color.WHITE)
+
+    def test_color_enpty_field(self):
+        self.assertIsNone(EmptyField().color)
+
+    def test_nonempty_field_color_immutable(self):
+        with self.assertRaises(AttributeError):
+            self.__black_field().color = Color.BLACK
+
+    def test_empty_field_color_immutable(self):
+        with self.assertRaises(AttributeError):
+            EmptyField().color = Color.WHITE
+
     def __black_field(self):
         return NonEmptyField(color=Color.BLACK)
 

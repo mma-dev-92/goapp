@@ -1,8 +1,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from enum import Enum
-import colorama
-from termcolor import colored
 
 from gologic.board.color import Color
 
@@ -52,20 +50,14 @@ class NonEmptyField(Field):
     def is_empty(self):
         return False
 
-    def color_print(self):
-        return colored('o', 'grey', 'on_cyan', attrs=['blink']) if self.color == Color.BLACK else colored(
-            'o', 'white', 'on_cyan', attrs=['blink'])
-
 
 class EmptyField(Field):
     def is_empty(self):
         return True
 
+    @property
     def color(self):
         return None
-
-    def color_print(self):
-        return colored('+', 'yellow', 'on_cyan', attrs=['blink'])
 
     def is_white(self):
         return False

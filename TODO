@@ -1,7 +1,5 @@
 POPRAWKI DO BOARD:
 
-1. Field powinno mieć współrzędne (trochę to może zająć...),
-2. EmptyField powinno mieć metodę color zwracającą None,
-2. BoardPosition.bind - brzydka! naprawić.
+1. BoardPosition.bind - brzydka! naprawić.
 
 OBMYŚLIĆ STATE I STATETREE
