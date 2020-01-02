@@ -50,12 +50,9 @@ class BoardPosition:
             if not stop_before(v):
                 result = f(result, v)
                 if not stop_after(v):
-                    self.__add_neighbours(of=v, to=to_visit, exclude=visited)
+                    to_visit.update([nv for nv in self.neighbours(v) if not visited[nv]])
             visited[v] = True
         return result
-
-    def __add_neighbours(self, of, to, exclude):
-        to.update([nv for nv in self.neighbours(of) if not exclude[nv]])
 
     def liberties(self, coord):
         if self.at(coord).is_empty():

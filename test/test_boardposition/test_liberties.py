@@ -1,3 +1,5 @@
+from itertools import product
+
 from test.test_boardposition.base import BaseTestCaseClass
 from gologic.board.color import Color
 
@@ -63,6 +65,19 @@ class TestLiberties(BaseTestCaseClass):
 
     def test_two_colors_on_board6(self):
         self.__do_test_with_two_colors(coord=(2, 2), expected_result=4)
+
+    def test_all_but_one_fields_in_one_color(self):
+        size = self.random_size()
+        coords = list(product(range(size), range(size)))
+        coords.remove((size - 1, size - 1))
+        self.__do_the_test(
+            coord=(0, 0),
+            coords={
+                Color.BLACK: coords
+            },
+            expected_result=1,
+            size=size
+        )
 
     def __do_test_with_two_colors(self, coord, expected_result):
         self.__do_the_test(
