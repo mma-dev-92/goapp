@@ -1,10 +1,8 @@
-import unittest
 from itertools import product
 import random
 
 from test.test_boardposition.base import BaseTestCaseClass
-from gologic.board.boardposition import BoardPosition
-from gologic.board.field import Field, EmptyField, NonEmptyField, Color
+from gologic.board.field import Color
 
 
 class TestGroup(BaseTestCaseClass):
@@ -69,14 +67,16 @@ class TestGroup(BaseTestCaseClass):
     def __simple_board_position_test(self, group):
         self.__do_the_test(coords=self.__simple_board_position(), group=group)
 
-    def __diagonal_stones_one_color(self):
+    @staticmethod
+    def __diagonal_stones_one_color():
         return {
             Color.BLACK: [
                 (0, 0), (0, 2), (2, 0), (1, 1)
             ]
         }
 
-    def __diagonal_stones_both_color(self):
+    @staticmethod
+    def __diagonal_stones_both_color():
         return {
             Color.BLACK: [
                 (1, 1), (2, 2)
@@ -95,7 +95,8 @@ class TestGroup(BaseTestCaseClass):
         coord_to_rmv = self.random_coord(size)
         return [x for x in list(product(range(size), range(size))) if not x == coord_to_rmv]
 
-    def __simple_board_position(self):
+    @staticmethod
+    def __simple_board_position():
         return {
             Color.BLACK: [
                 (6, 2), (7, 2), (6, 1), (2, 0), (1, 4), (2, 4), (3, 4), (2, 3), (2, 5)
@@ -108,7 +109,7 @@ class TestGroup(BaseTestCaseClass):
     def __do_the_test(self, coords, group, size=None):
         size = size if size else self.random_size()
         bp = self.fill(self.empty_board(size), coords)
-        input = random.choice(group)
-        result = sorted(bp.group(input))
+        input_data = random.choice(group)
+        result = sorted(bp.group(input_data))
         expected_result = sorted(group)
-        self.assertEqual(result, expected_result, msg=self.error_msg(bp, input, result, expected_result))
+        self.assertEqual(result, expected_result, msg=self.error_msg(bp, input_data, result, expected_result))

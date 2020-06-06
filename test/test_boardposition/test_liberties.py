@@ -86,7 +86,8 @@ class TestLiberties(BaseTestCaseClass):
             expected_result=expected_result
         )
 
-    def __two_colors_coords(self):
+    @staticmethod
+    def __two_colors_coords():
         return {
             Color.BLACK: [(2, 0), (1, 1), (0, 2), (1, 2), (1, 4), (2, 4), (2, 3), (2, 5), (3, 4)],
             Color.WHITE: [(1, 0), (0, 1), (2, 1), (2, 2), (3, 1), (3, 2), (3, 3)]

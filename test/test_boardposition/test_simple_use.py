@@ -1,7 +1,4 @@
-from itertools import product
-from random import choice
-
-from .base import BaseTestCaseClass
+from test.test_boardposition.base import BaseTestCaseClass
 from gologic.board.boardposition import BoardPosition
 from gologic.board.field import Color
 
@@ -28,7 +25,7 @@ class TestBoardPositionSimpleUse(BaseTestCaseClass):
 
     def test_size_for_immutability(self):
         with self.assertRaises(AttributeError):
-            self.random_board().size = 13
+            self.random_nonempty_board().size = 13
 
     def test_clear(self):
         bp = self.random_nonempty_board()
@@ -94,7 +91,7 @@ class TestBoardPositionSimpleUse(BaseTestCaseClass):
 
     def test__eq__wrong_other_object_type(self):
         bp = self.random_size_empty_board()
-        for other in [23, "haha!"]:
+        for other in [23, "other!"]:
             with self.assertRaises(TypeError, msg="__eq__: other object of type: {}, exception not thronw".format(type(other))):
                 bp == other
 

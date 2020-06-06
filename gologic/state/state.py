@@ -1,24 +1,23 @@
-from ..board.color import Color
-
-
-class IllegalMoveError(Exception):
-    pass
-
-
-class SuicideMoveError(IllegalMoveError):
-    pass
-
-
-class OccupiedFieldMoveError(IllegalMoveError):
-    pass
-
-
 class State:
     def __init__(self):
         pass
 
-    def calculate_next_state(self, color, coords):
+    @staticmethod
+    def initial_state(self):
         pass
 
-    def illegal_moves_mask(self):
+    @property
+    def prev_position(self):
+        pass
+
+    @property
+    def position(self):
+        pass
+
+    @property
+    def captured_black_stones(self):
+        pass
+
+    @property
+    def captured_white_stones(self):
         pass

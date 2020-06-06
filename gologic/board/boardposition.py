@@ -1,8 +1,7 @@
 from __future__ import annotations
 from itertools import product
-from typing import TypeVar, Callable, Tuple
 
-from gologic.board.field import Field, EmptyField, NonEmptyField
+from gologic.board.field import EmptyField, NonEmptyField
 
 
 class BoardPosition:
@@ -12,15 +11,14 @@ class BoardPosition:
     def __init__(self, size):
         self.__check_size(size)
         self.__size = size
-        self.__board_mask = {coord: EmptyField()
-                             for coord in product(range(size), range(size))}
+        self.__board_mask = {coord: EmptyField() for coord in product(range(size), range(size))}
 
     @property
     def size(self):
         return self.__size
 
     @property
-    def coords(self):
+    def coordinates(self):
         return self.__board_mask.keys()
 
     def clear(self):
@@ -40,15 +38,16 @@ class BoardPosition:
         self.__board_mask[coord] = EmptyField()
 
     def __eq__(self, other):
-        self.__typecheck(against=other)
+        self.__type_check(against=other)
         return self.__board_mask == other.__board_mask
 
-    def bind(self, f, e, start_coord, stop_before=lambda x: False, stop_after=lambda x: False):
-        visited, to_visit, result = {coord: False for coord in self.coords}, set([start_coord]), e
+    def bind(self, operation, neutral_elem, start_coord, stop_before=lambda x: False, stop_after=lambda x: False):
+        result = neutral_elem
+        visited, to_visit = {coord: False for coord in self.coordinates}, {start_coord}
         while to_visit:
             v = to_visit.pop()
             if not stop_before(v):
-                result = f(result, v)
+                result = operation(result, v)
                 if not stop_after(v):
                     to_visit.update([nv for nv in self.neighbours(v) if not visited[nv]])
             visited[v] = True
@@ -67,7 +66,7 @@ class BoardPosition:
         def stop_after(_coord):
             return self.at(_coord).is_empty()
 
-        return self.bind(f=f, e=0, start_coord=coord, stop_before=stop_before, stop_after=stop_after)
+        return self.bind(operation=f, neutral_elem=0, start_coord=coord, stop_before=stop_before, stop_after=stop_after)
 
     def group(self, coord):
         if self.at(coord).is_empty():
@@ -79,21 +78,21 @@ class BoardPosition:
         def stop_before(_coord):
             return not self.at(_coord) == self.at(coord)
 
-        return self.bind(f=f, e=[], start_coord=coord, stop_before=stop_before)
+        return self.bind(operation=f, neutral_elem=[], start_coord=coord, stop_before=stop_before)
 
     def neighbours(self, coord):
         row, col = coord
-        return [(row + rt, col) for rt in self.__get_transl(row)] + \
-            [(row, col + ct) for ct in self.__get_transl(col)]
+        return [(row + row_transl, col) for row_transl in self.__get_transl(row)] + \
+            [(row, col + col_transl) for col_transl in self.__get_transl(col)]
 
     def __get_transl(self, val):
         if val == 0:
             return (1,)
         elif val == self.size - 1:
             return (-1,)
-        return (-1, 1)
+        return -1, 1
 
-    def __typecheck(self, against):
+    def __type_check(self, against):
         if not isinstance(against, BoardPosition):
             raise TypeError("can not compare BoardPosition to {}".format(type(against)))
         if not self.size == against.size:
@@ -106,7 +105,7 @@ class BoardPosition:
         if not len(coord) == 2:
             raise ValueError(
                 "BoardPosition coord must be a tuple with exactly two elements")
-        if not coord in self.__board_mask:
+        if coord not in self.__board_mask:
             raise IndexError("BoardPosition coord - index out of range")
 
     def __check_size(self, size):

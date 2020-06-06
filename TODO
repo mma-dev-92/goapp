@@ -1,1 +1,8 @@
-OBMYŚLIĆ STATE I STATETREE
+Przeorganizować strukturę katalogów gologic (po cholerę rozbijać to na tyle modułów!)
+
+Wszystko z boardposition wrzucić do jednego pliku (color, field i boardposition)...
+State to też jeden plik...
+State, statetree i boardposition można wrzucić do jednego modułu.
+next_state, next_position i hierarchię wyjątków można wrzucić do drugiego modułu.
+
+I JUŻ - NIE NALEŻY PRZEKOMBINOWYWAĆ !!!

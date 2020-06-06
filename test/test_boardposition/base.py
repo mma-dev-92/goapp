@@ -1,5 +1,4 @@
 import unittest
-import colorama
 from itertools import product
 from random import choice, sample
 from termcolor import colored
@@ -14,7 +13,8 @@ class BaseTestCaseClass(unittest.TestCase):
         self.coords = {size: self.__all_valid_coords(size) for size in self.sizes}
         self.boards = [BoardPosition(size) for size in self.sizes]
 
-    def __all_valid_coords(self, size):
+    @staticmethod
+    def __all_valid_coords(size):
         return list(product(range(size), range(size)))
 
     def print_position(self, bp):
@@ -26,16 +26,18 @@ class BaseTestCaseClass(unittest.TestCase):
     def print_field(self, field):
         return self.print_nonempty_field(field) if not field.is_empty() else self.print_empty_field()
 
-    def print_empty_field(self):
+    @staticmethod
+    def print_empty_field():
         return colored('+', 'yellow', 'on_cyan', attrs=['blink'])
 
-    def print_nonempty_field(self, field):
+    @staticmethod
+    def print_nonempty_field(field):
         return colored('o', 'grey', 'on_cyan', attrs=['blink']) if field.is_black() else colored(
             'o', 'white', 'on_cyan', attrs=['blink'])
 
-    def error_msg(self, bp, input, result, expected_result):
+    def error_msg(self, bp, input_data, result, expected_result):
         return "\n\nError on board:\n{}\n{}\n{}\ninput: {}\noutput is: {}\nbut should be: {}".format(
-            bp.size * "-", self.print_position(bp), bp.size * "-", input, result, expected_result)
+            bp.size * "-", self.print_position(bp), bp.size * "-", input_data, result, expected_result)
 
     def do_test_for_no_exception_rising(self, function, **params):
         try:
@@ -53,7 +55,8 @@ class BaseTestCaseClass(unittest.TestCase):
     def random_size(self):
         return choice(self.sizes)
 
-    def fill(self, bp, coords):
+    @staticmethod
+    def fill(bp, coords):
         for color, coords in coords.items():
             for coord in coords:
                 bp.set_field(coord, color)
@@ -74,5 +77,6 @@ class BaseTestCaseClass(unittest.TestCase):
             Color.WHITE: rand_coords[black:],
         }
 
-    def empty_board(self, size):
+    @staticmethod
+    def empty_board(size):
         return BoardPosition(size)

@@ -1,7 +1,4 @@
-from random import choice
-
 from test.test_boardposition.base import BaseTestCaseClass
-from gologic.board.boardposition import BoardPosition
 
 
 class TestNeighbours(BaseTestCaseClass):
@@ -16,7 +13,7 @@ class TestNeighbours(BaseTestCaseClass):
 
     def test_edge_with_size_value_indexes(self):
         bp = self.random_nonempty_board()
-        self.__do_the_test_with_specyfic_bp(
+        self.__do_the_test_with_specific_bp(
             (bp.size - 1, bp.size - 1), [(bp.size - 2, bp.size - 1), (bp.size - 1, bp.size - 2)], bp)
 
     def __do_the_test(self, coord, expected_result):
@@ -24,7 +21,7 @@ class TestNeighbours(BaseTestCaseClass):
         result = board.neighbours(coord)
         self.assertEqual(sorted(result), sorted(expected_result))
 
-    def __do_the_test_with_specyfic_bp(self, coord, expected_result, bp):
+    def __do_the_test_with_specific_bp(self, coord, expected_result, bp):
         result = bp.neighbours(coord)
         self.assertEqual(sorted(result), sorted(expected_result),
                          msg=self.error_msg(bp, coord, result, expected_result))

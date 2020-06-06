@@ -1,5 +1,3 @@
-import unittest
-
 from gologic.board.field import Field, EmptyField, NonEmptyField, Color
 from test.test_boardposition.base import BaseTestCaseClass
 
@@ -78,10 +76,12 @@ class TestField(BaseTestCaseClass):
         with self.assertRaises(AttributeError):
             EmptyField().color = Color.WHITE
 
-    def __black_field(self):
+    @staticmethod
+    def __black_field():
         return NonEmptyField(color=Color.BLACK)
 
-    def __white_field(self):
+    @staticmethod
+    def __white_field():
         return NonEmptyField(color=Color.WHITE)
 
     def __test_if_class_is_abstract(self, to_test):

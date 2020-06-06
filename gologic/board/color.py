@@ -6,5 +6,5 @@ class Color(Enum):
     BLACK = 1
     WHITE = 2
 
-    def oposite(self):
+    def opposite(self):
         return Color.WHITE if self.name == 'BLACK' else Color.WHITE

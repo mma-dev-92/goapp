@@ -1,6 +1,5 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from enum import Enum
 
 from gologic.board.color import Color
 
@@ -18,11 +17,14 @@ class Field(ABC):
     def is_white(self):
         pass
 
+    @property
+    @abstractmethod
+    def color(self):
+        pass
+
     def __eq__(self, other):
         if not isinstance(other, Field):
-            raise TypeError(
-                "can not compare {} to type {}".format(
-                    Field, type(other)))
+            raise TypeError("can not compare {} to type {}".format(Field, type(other)))
         if self.is_empty() and other.is_empty():
             return True
         elif not self.is_empty() == other.is_empty():
