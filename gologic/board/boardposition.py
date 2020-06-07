@@ -55,7 +55,7 @@ class BoardPosition:
 
     def liberties(self, coord):
         if self.at(coord).is_empty():
-            raise RuntimeError("Trying to count liberties of an empty field")
+            raise RuntimeError("trying to count liberties of an empty field")
 
         def f(val, _coord):
             return val + 1 if self.at(_coord).is_empty() else val
@@ -101,12 +101,12 @@ class BoardPosition:
 
     def __check_coord(self, coord):
         if not isinstance(coord, tuple):
-            raise TypeError("BoardPosition coord must be a tuple")
+            raise TypeError("coord must be a tuple")
         if not len(coord) == 2:
             raise ValueError(
-                "BoardPosition coord must be a tuple with exactly two elements")
+                "coord must be a tuple with exactly two elements")
         if coord not in self.__board_mask:
-            raise IndexError("BoardPosition coord - index out of range")
+            raise IndexError("coord - index out of range")
 
     def __check_size(self, size):
         if not isinstance(size, int):

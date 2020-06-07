@@ -43,8 +43,8 @@ class BaseTestCaseClass(unittest.TestCase):
         try:
             function(**params)
         except Exception as error:
-            self.fail("{} raised exception {} with parameters {}".format(
-                function.__name__, error, kwargs_to_str(**params)))
+            self.fail("{} raised exception {}".format(
+                function.__name__, error))
 
     def random_size_empty_board(self):
         return choice(self.boards)
