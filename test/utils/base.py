@@ -148,3 +148,14 @@ class BaseTestCaseClass(unittest.TestCase):
                 (0, 2), (2, 2), (1, 3)
             ]
         }
+
+    @staticmethod
+    def u_like_position():
+        return {
+            Color.BLACK: [
+                (0, 0), (0, 1), (1, 1), (2, 1), (2, 0)
+            ],
+            Color.WHITE: [
+                (0, 2), (1, 2), (2, 2), (3, 2), (3, 1), (3, 0)
+            ]
+        }

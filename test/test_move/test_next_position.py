@@ -7,8 +7,17 @@ from gologic.board.color import Color
 
 
 class TestNextPosition(BaseTestCaseClass):
-    def test_simple_case_legal_move(self):
-        pass
+    def test_capture_u_like_shape(self):
+        self.__do_the_test(
+            input_board_conf=self.u_like_position(),
+            expected_board_conf=self.alter_board_conf(
+                conf=self.u_like_position(),
+                to_add={Color.WHITE: [(1, 0)]},
+                to_remove={Color.BLACK: [(0, 0), (0, 1), (1, 1), (2, 1), (2, 0)]},
+            ),
+            color=Color.WHITE,
+            move_cord=(1, 0)
+        )
 
     def test_ko(self):
         self.__do_the_test(
