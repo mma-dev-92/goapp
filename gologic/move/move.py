@@ -16,7 +16,11 @@ class OccupiedFieldMoveError(IllegalMoveError):
     pass
 
 
-class RepeatedPositionMoveError(IllegalMoveError):
+class IllegalPositionError(Exception):
+    pass
+
+
+class RepeatedPositionMoveError(IllegalPositionError):
     pass
 
 
@@ -25,4 +29,4 @@ def next_state(state: State, coordinates: Tuple[int, int], color: Color):
 
 
 def next_position(bp: BoardPosition, coordinates: Tuple[int, int], color: Color):
-    pass
+    return bp
