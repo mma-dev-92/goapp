@@ -1,5 +1,7 @@
 from gologic.board.boardposition import BoardPosition
+from typing import Tuple
 from gologic.state.state import State
+from gologic.board.color import Color
 
 
 class IllegalMoveError(Exception):
@@ -18,9 +20,9 @@ class RepeatedPositionMoveError(IllegalMoveError):
     pass
 
 
-def next_state(state, coordinates, color):
+def next_state(state: State, coordinates: Tuple[int, int], color: Color):
     pass
 
 
-def next_position(bp, coordinates, color):
+def next_position(bp: BoardPosition, coordinates: Tuple[int, int], color: Color):
     pass

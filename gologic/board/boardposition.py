@@ -87,9 +87,9 @@ class BoardPosition:
 
     def __get_transl(self, val):
         if val == 0:
-            return (1,)
+            return 1,
         elif val == self.size - 1:
-            return (-1,)
+            return -1,
         return -1, 1
 
     def __type_check(self, against):
