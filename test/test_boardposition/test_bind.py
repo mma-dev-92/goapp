@@ -1,6 +1,6 @@
-from random import randrange, randint
+from random import randint
 
-from test.test_boardposition.base import BaseTestCaseClass
+from test.utils.base import BaseTestCaseClass
 
 
 # TODO: refactor it... it is ugly...

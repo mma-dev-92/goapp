@@ -1,5 +1,5 @@
 from gologic.board.field import Field, EmptyField, NonEmptyField, Color
-from test.test_boardposition.base import BaseTestCaseClass
+from test.utils.base import BaseTestCaseClass
 
 
 class TestField(BaseTestCaseClass):

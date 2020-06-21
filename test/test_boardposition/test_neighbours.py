@@ -1,4 +1,4 @@
-from test.test_boardposition.base import BaseTestCaseClass
+from test.utils.base import BaseTestCaseClass
 
 
 class TestNeighbours(BaseTestCaseClass):

@@ -1,7 +1,7 @@
 from itertools import product
 import random
 
-from test.test_boardposition.base import BaseTestCaseClass
+from test.utils.base import BaseTestCaseClass
 from gologic.board.field import Color
 
 

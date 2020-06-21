@@ -1,6 +1,6 @@
 from itertools import product
 
-from test.test_boardposition.base import BaseTestCaseClass
+from test.utils.base import BaseTestCaseClass
 from gologic.board.color import Color
 
 
