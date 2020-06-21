@@ -17,9 +17,9 @@ class TestBind(BaseTestCaseClass):
     def test_count_black_stones_on_random_board(self):
         bp = self.random_size_empty_board()
         black_stones = randint(0, bp.size - 1)
-        random_coords = self.random_coords(
+        random_coordinates = self.random_coordinates(
             bp.size, black=black_stones, white=bp.size ** 2 - black_stones)
-        bp = self.fill(bp, random_coords)
+        bp = self.fill(bp, random_coordinates)
         result = bp.bind(operation=lambda val, coord: val + 1 if bp.at(coord).is_black()
                          else val, neutral_elem=0, start_coord=(0, 0))
         self.assertEqual(result, black_stones,
@@ -27,7 +27,7 @@ class TestBind(BaseTestCaseClass):
 
     def test_sum_empty_fields_on_random_board(self):
         bp = self.random_size_empty_board()
-        bp = self.fill(bp, self.random_coords(bp.size, black=5, white=5))
+        bp = self.fill(bp, self.random_coordinates(bp.size, black=5, white=5))
 
         expected_result = sum(range(bp.size ** 2 - 10))
         result = bp.bind(operation=lambda val, coord: (val[0] + 1, val[1] + val[0]) if bp.at(coord).is_empty()
