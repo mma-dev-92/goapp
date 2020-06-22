@@ -1,12 +1,20 @@
 import random
 
 from test.utils.base import BaseTestCaseClass
-from gologic.move.move import next_position, IllegalMoveError, OccupiedFieldMoveError, SuicideMoveError
+from gologic.move.move import next_position, OccupiedFieldMoveError, SuicideMoveError
 from gologic.board.boardposition import BoardPosition
 from gologic.board.color import Color
 
 
 class TestNextPosition(BaseTestCaseClass):
+
+    def test_suicide_move_u_like_shape(self):
+        bp = self.fill(BoardPosition(self.random_size()), self.u_like_position())
+        color = Color.BLACK
+        coordinate = (1, 0)
+        with self.assertRaises(SuicideMoveError, msg=self.error_msg(bp, (coordinate, color), None, SuicideMoveError)):
+            next_position(bp, coordinate, color)
+
     def test_capture_u_like_shape(self):
         self.__do_the_test(
             input_board_conf=self.u_like_position(),
