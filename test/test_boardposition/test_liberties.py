@@ -15,7 +15,7 @@ class TestLiberties(BaseTestCaseClass):
     def test_single_stone_on_the_middle(self):
         self.__do_the_test(
             coord=(3, 3),
-            coords={
+            coordinates={
                 Color.BLACK: [(3, 3)]
             },
             expected_result=4
@@ -24,7 +24,7 @@ class TestLiberties(BaseTestCaseClass):
     def test_single_stone_in_the_corner(self):
         self.__do_the_test(
             coord=(0, 0),
-            coords={
+            coordinates={
                 Color.WHITE: [(0, 0)]
             },
             expected_result=2
@@ -33,7 +33,7 @@ class TestLiberties(BaseTestCaseClass):
     def test_single_stone_on_side(self):
         self.__do_the_test(
             coord=(1, 0),
-            coords={
+            coordinates={
                 Color.WHITE: [(1, 0)]
             },
             expected_result=3
@@ -42,7 +42,7 @@ class TestLiberties(BaseTestCaseClass):
     def test_5_group_stones_only(self):
         self.__do_the_test(
             coord=(2, 2),
-            coords={
+            coordinates={
                 Color.BLACK: [(2, 0), (2, 1), (2, 2), (3, 1), (1, 1)]
             },
             expected_result=7
@@ -68,12 +68,12 @@ class TestLiberties(BaseTestCaseClass):
 
     def test_all_but_one_fields_in_one_color(self):
         size = self.random_size()
-        coords = list(product(range(size), range(size)))
-        coords.remove((size - 1, size - 1))
+        coordinates = list(product(range(size), range(size)))
+        coordinates.remove((size - 1, size - 1))
         self.__do_the_test(
             coord=(0, 0),
-            coords={
-                Color.BLACK: coords
+            coordinates={
+                Color.BLACK: coordinates
             },
             expected_result=1,
             size=size
@@ -82,21 +82,14 @@ class TestLiberties(BaseTestCaseClass):
     def __do_test_with_two_colors(self, coord, expected_result):
         self.__do_the_test(
             coord=coord,
-            coords=self.__two_colors_coords(),
+            coordinates=self.two_colors_coordinates(),
             expected_result=expected_result
         )
 
-    @staticmethod
-    def __two_colors_coords():
-        return {
-            Color.BLACK: [(2, 0), (1, 1), (0, 2), (1, 2), (1, 4), (2, 4), (2, 3), (2, 5), (3, 4)],
-            Color.WHITE: [(1, 0), (0, 1), (2, 1), (2, 2), (3, 1), (3, 2), (3, 3)]
-        }
-
-    def __do_the_test(self, coord, coords, expected_result, size=None):
+    def __do_the_test(self, coord, coordinates, expected_result, size=None):
         size = size if size else self.random_size()
         bp = self.empty_board(size)
-        bp = self.fill(bp, coords)
+        bp = self.fill(bp, coordinates)
         result = bp.liberties(coord)
         self.assertEqual(result, expected_result,
                          msg=self.error_msg(bp, coord, result, expected_result))

@@ -36,7 +36,7 @@ class TestBoardPositionSimpleUse(BaseTestCaseClass):
         size = self.random_size()
         empty_board = self.empty_board(size)
         non_empty = list(filter(lambda f: not f.is_empty(),
-                                [empty_board.at(c) for c in self.coords[size]]))
+                                [empty_board.at(c) for c in self.coordinates[size]]))
         self.assertTrue(len(non_empty) == 0)
 
     def test_set_field_on_empty_board(self):
@@ -101,7 +101,7 @@ class TestBoardPositionSimpleUse(BaseTestCaseClass):
 
     def test__eq__when_nonempty_objects_are_equal(self):
         random_size = self.random_size()
-        random_coords = self.random_coords(random_size, black=30, white=29)
+        random_coords = self.random_coordinates(random_size, black=30, white=29)
         bp = self.fill(self.empty_board(random_size), random_coords)
         other = self.fill(self.empty_board(random_size), random_coords)
         self.assertTrue(bp == other)
