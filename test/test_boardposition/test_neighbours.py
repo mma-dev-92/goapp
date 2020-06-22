@@ -18,10 +18,10 @@ class TestNeighbours(BaseTestCaseClass):
 
     def __do_the_test(self, coord, expected_result):
         board = self.random_size_empty_board()
-        result = board.neighbours(coord)
+        result = board.neighbors(coord)
         self.assertEqual(sorted(result), sorted(expected_result))
 
     def __do_the_test_with_specific_bp(self, coord, expected_result, bp):
-        result = bp.neighbours(coord)
+        result = bp.neighbors(coord)
         self.assertEqual(sorted(result), sorted(expected_result),
                          msg=self.error_msg(bp, coord, result, expected_result))

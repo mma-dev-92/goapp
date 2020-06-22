@@ -49,7 +49,7 @@ class BoardPosition:
             if not stop_before(v):
                 result = operation(result, v)
                 if not stop_after(v):
-                    to_visit.update([nv for nv in self.neighbours(v) if not visited[nv]])
+                    to_visit.update([nv for nv in self.neighbors(v) if not visited[nv]])
             visited[v] = True
         return result
 
@@ -80,7 +80,7 @@ class BoardPosition:
 
         return self.bind(operation=f, neutral_elem=[], start_coord=coord, stop_before=stop_before)
 
-    def neighbours(self, coord):
+    def neighbors(self, coord):
         row, col = coord
         return [(row + row_transl, col) for row_transl in self.__get_transl(row)] + \
             [(row, col + col_transl) for col_transl in self.__get_transl(col)]

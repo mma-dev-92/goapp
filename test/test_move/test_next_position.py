@@ -1,5 +1,4 @@
 import random
-
 from test.utils.base import BaseTestCaseClass
 from gologic.move.move import next_position, OccupiedFieldMoveError, SuicideMoveError
 from gologic.board.boardposition import BoardPosition
@@ -97,7 +96,7 @@ class TestNextPosition(BaseTestCaseClass):
         size = size if size else self.random_size()
         input_position = self.fill(BoardPosition(size), input_board_conf)
         expected_result = self.fill(BoardPosition(size), expected_board_conf)
-        result = next_position(input_position, color, move_cord)
+        result = next_position(input_position, move_cord, color)
         self.assertEqual(result, expected_result, msg=self.error_msg(
             bp=input_position,
             input_data=(move_cord, color),
