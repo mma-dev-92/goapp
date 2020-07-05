@@ -1,18 +1,31 @@
 import random
 from test.utils.base import BaseTestCaseClass
-from gologic.move.move import next_position, OccupiedFieldMoveError, SuicideMoveError
-from gologic.board.boardposition import BoardPosition
+from gologic.board.boardposition import OccupiedFieldMoveError, SuicideMoveError
+from gologic.board.boardposition import BoardPosition, InitialBoardPosition
 from gologic.board.color import Color
 
 
 class TestNextPosition(BaseTestCaseClass):
+
+    def test_next_position_from_initial_position(self):
+        random_size = self.random_size()
+        init_pos = InitialBoardPosition(random_size)
+        random_coordinates = self.random_coord(random_size)
+        random_color = self.random_color()
+
+        result = init_pos.next_position(coordinates=random_coordinates, color=random_color)
+        expected_result = self.fill(BoardPosition(size=random_size), coordinates={
+            random_color: [random_coordinates]
+        })
+
+        self.assertEqual(result, expected_result)
 
     def test_suicide_move_u_like_shape(self):
         bp = self.fill(BoardPosition(self.random_size()), self.u_like_position())
         color = Color.BLACK
         coordinate = (1, 0)
         with self.assertRaises(SuicideMoveError, msg=self.error_msg(bp, (coordinate, color), None, SuicideMoveError)):
-            next_position(bp, coordinate, color)
+            bp.next_position(coordinate, color)
 
     def test_capture_u_like_shape(self):
         self.__do_the_test(
@@ -43,7 +56,7 @@ class TestNextPosition(BaseTestCaseClass):
         bp = self.fill(BoardPosition(size), self.diagonal_stones_one_color_position())
         coordinate, color = (1, 0), Color.WHITE
         with self.assertRaises(SuicideMoveError, msg=self.error_msg(bp, (coordinate, color), None, SuicideMoveError)):
-            next_position(bp, coordinate, color)
+            bp.next_position(coordinate, color)
 
     def test_move_on_empty_board(self):
         size = self.random_size()
@@ -62,7 +75,7 @@ class TestNextPosition(BaseTestCaseClass):
         in_data = random.choice(board_conf[self.random_color()]), self.random_color()
         bp = self.fill(BoardPosition(self.random_size()), board_conf)
         with self.assertRaises(OccupiedFieldMoveError, msg=self.error_msg(bp, in_data, None, OccupiedFieldMoveError)):
-            next_position(bp, *in_data)
+            bp.next_position(*in_data)
 
     def test_capture_with_quasi_suicide_move1(self):
         self.__do_the_test(
@@ -96,7 +109,7 @@ class TestNextPosition(BaseTestCaseClass):
         size = size if size else self.random_size()
         input_position = self.fill(BoardPosition(size), input_board_conf)
         expected_result = self.fill(BoardPosition(size), expected_board_conf)
-        result = next_position(input_position, move_cord, color)
+        result = input_position.next_position(move_cord, color)
         self.assertEqual(result, expected_result, msg=self.error_msg(
             bp=input_position,
             input_data=(move_cord, color),

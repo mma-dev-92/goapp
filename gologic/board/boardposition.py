@@ -1,36 +1,90 @@
 from __future__ import annotations
 from itertools import product
 from abc import ABC, abstractmethod
+from typing import Tuple
+from copy import deepcopy
 
 from gologic.board.field import EmptyField, NonEmptyField, Field
+from gologic.board.color import Color
+
+
+
+class IllegalMoveError(Exception):
+    pass
+
+
+class SuicideMoveError(IllegalMoveError):
+    pass
+
+
+class OccupiedFieldMoveError(IllegalMoveError):
+    pass
+
+
+class IllegalPositionError(Exception):
+    pass
+
 
 
 class AbcBoardPosition(ABC):
+    VALID_SIZES = [9, 13, 19]
+
+    def __init__(self, size: int):
+        self.__check_size(size)
+        self.__size = size
+
     @abstractmethod
     def initial(self) -> bool:
         pass
 
+    @property
+    def size(self):
+        return self.__size
+
+    def __eq__(self, other):
+        if not isinstance(other, AbcBoardPosition):
+            raise TypeError("can not compare AbcBoardPosition to {}".format(type(other)))
+        if not self.initial() == other.initial():
+            raise TypeError("can not compare initial and non initial board positions")
+        if not self.size == other.size:
+            raise RuntimeError("can not compare AbcBoardPosition of size {} with AbcBoardPosition of size {}".format(
+                self.size, other.size))
+        return True
+
+    def __check_size(self, size):
+        if not isinstance(size, int):
+            raise TypeError("size must be an int")
+        if size not in self.VALID_SIZES:
+            raise ValueError("size must be one of {}".format(self.VALID_SIZES))
+
+    @abstractmethod
+    def next_position(self, coordinates: Tuple[int, int], color: Color):
+        pass
+
 
 class InitialBoardPosition(AbcBoardPosition):
+    def __init__(self, size):
+        super(InitialBoardPosition, self).__init__(size)
+        
+    def __eq__(self, other):
+        return super(InitialBoardPosition, self).__eq__(other)
+
     def initial(self) -> bool:
         return True
 
+    def next_position(self, coordinates: Tuple[int, int], color: Color):
+        result = BoardPosition(self.size)
+        result.set_field(coordinates, color)
+        return result
+
 
 class BoardPosition(AbcBoardPosition):
-
-    __VALID_SIZES = [9, 13, 19]
-
     def __init__(self, size):
-        self.__check_size(size)
-        self.__size = size
+        super(BoardPosition, self).__init__(size)
         self.__board_mask = {coord: EmptyField() for coord in product(range(size), range(size))}
 
     def initial(self) -> bool:
         return False
-
-    @property
-    def size(self):
-        return self.__size
 
     @property
     def coordinates(self):
@@ -53,8 +107,7 @@ class BoardPosition(AbcBoardPosition):
         self.__board_mask[coord] = EmptyField()
 
     def __eq__(self, other):
-        self.__type_check(against=other)
-        return self.__board_mask == other.__board_mask
+        return super(BoardPosition, self).__eq__(other) and self.__board_mask == other.__board_mask
 
     def bind(self, operation, neutral_elem, start_coord, stop_before=lambda x: False, stop_after=lambda x: False):
         result = neutral_elem
@@ -100,6 +153,30 @@ class BoardPosition(AbcBoardPosition):
         return [(row + row_transl, col) for row_transl in self.__get_transl(row)] + \
             [(row, col + col_transl) for col_transl in self.__get_transl(col)]
 
+    def next_position(self, coordinates: Tuple[int, int], color: Color):
+        if not self.at(coordinates).is_empty():
+            raise OccupiedFieldMoveError
+
+        bp_copy = deepcopy(self)
+        bp_copy.set_field(coordinates, color)
+
+        for neighbor_coordinate in bp_copy.neighbors(coordinates):
+            if not bp_copy.at(neighbor_coordinate).is_empty() and bp_copy.at(
+                    neighbor_coordinate).color == color.opposite():
+                bp_copy = bp_copy.__kill_group_if_zero_liberties(neighbor_coordinate)
+
+        if bp_copy.liberties(coordinates) == 0:
+            raise SuicideMoveError
+
+        return bp_copy
+
+    def __kill_group_if_zero_liberties(self, coordinate: Tuple[int, int]):
+        if not self.liberties(coordinate) == 0:
+            return self
+        for group_member_coordinates in self.group(coordinate):
+            self.clear_field(group_member_coordinates)
+        return self
+
     def __get_transl(self, val):
         if val == 0:
             return 1,
@@ -122,9 +199,3 @@ class BoardPosition(AbcBoardPosition):
                 "coord must be a tuple with exactly two elements")
         if coord not in self.__board_mask:
             raise IndexError("coord - index out of range")
-
-    def __check_size(self, size):
-        if not isinstance(size, int):
-            raise TypeError("size must be an int")
-        if size not in self.__VALID_SIZES:
-            raise ValueError("size must be one of {}".format(self.__VALID_SIZES))

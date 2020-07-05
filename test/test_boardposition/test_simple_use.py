@@ -33,7 +33,7 @@ class TestBoardPositionSimpleUse(BaseTestCaseClass):
         self.assertEqual(bp, self.empty_board(bp.size))
 
     def test_init_board_position(self):
-        init_bp = InitialBoardPosition()
+        init_bp = InitialBoardPosition(self.random_size())
         self.assertTrue(init_bp.initial())
 
     def test_board_position_is_not_init(self):
@@ -94,14 +94,33 @@ class TestBoardPositionSimpleUse(BaseTestCaseClass):
         random_size = self.random_size()
         bp = self.empty_board(random_size)
         other = self.empty_board(self.other_sizes(random_size)[0])
-        with self.assertRaises(ValueError):
-            bp == other
+        with self.assertRaises(RuntimeError):
+            bp.__eq__(other)
+
+    def test__eq__same_sizes_initial_board_position(self):
+        random_size = self.random_size()
+        init_bp = InitialBoardPosition(random_size)
+        init_bp_2 = InitialBoardPosition(random_size)
+        self.assertEqual(init_bp, init_bp_2)
+
+    def test__eq__different_sizes_initial_board_position(self):
+        init_bp = InitialBoardPosition(size=9)
+        init_bp_2 = InitialBoardPosition(size=13)
+        with self.assertRaises(RuntimeError):
+            init_bp.__eq__(init_bp_2)
+
+    def test__eq__initial_and_non_initial_same_size(self):
+        random_size = self.random_size()
+        init_bp = InitialBoardPosition(random_size)
+        bp = BoardPosition(random_size)
+        with self.assertRaises(TypeError):
+            bp.__eq__(init_bp)
 
     def test__eq__wrong_other_object_type(self):
         bp = self.random_size_empty_board()
         for other in [23, "other!"]:
             with self.assertRaises(TypeError, msg="__eq__: other object of type: {}, exception not thronw".format(type(other))):
-                bp == other
+                bp.__eq__(other)
 
     def test__eq__empty_objects(self):
         random_size = self.random_size()

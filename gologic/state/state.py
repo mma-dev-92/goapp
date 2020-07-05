@@ -1,11 +1,11 @@
-from gologic.board.boardposition import BoardPosition
+from gologic.board.boardposition import InitialBoardPosition, AbcBoardPosition
 from gologic.board.color import Color
 from typing import Dict
 from copy import deepcopy
 
 
 class State:
-    def __init__(self, prev_pos: BoardPosition, now_pos: BoardPosition, captured: Dict[Color, int], to_move: Color):
+    def __init__(self, prev_pos: AbcBoardPosition, now_pos: AbcBoardPosition, captured: Dict[Color, int], to_move: Color):
         self.__check_board_positions(prev_pos, now_pos)
         self.__prev_position, self.__now_position = prev_pos, now_pos
         self.__check_captured(captured)
@@ -51,11 +51,19 @@ class State:
 
     @staticmethod
     def __check_board_positions(prev_pos, now_pos):
-        if not isinstance(prev_pos, BoardPosition) or not isinstance(now_pos, BoardPosition):
+        if not isinstance(prev_pos, AbcBoardPosition) or not isinstance(now_pos, AbcBoardPosition):
             raise TypeError("gologic.board.color.BoardPosition type required")
         if not prev_pos.size == now_pos.size:
             raise RuntimeError("prev_pos and now_pos have different size!")
 
 
-def initial_state() -> State:
-    pass
+def initial_state(size: int) -> State:
+    return State(
+        prev_pos=InitialBoardPosition(size),
+        now_pos=InitialBoardPosition(size),
+        captured={
+            Color.BLACK: 0,
+            Color.WHITE: 0
+        },
+        to_move=Color.BLACK
+    )
