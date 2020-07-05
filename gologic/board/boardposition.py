@@ -1,10 +1,22 @@
 from __future__ import annotations
 from itertools import product
+from abc import ABC, abstractmethod
 
-from gologic.board.field import EmptyField, NonEmptyField
+from gologic.board.field import EmptyField, NonEmptyField, Field
 
 
-class BoardPosition:
+class AbcBoardPosition(ABC):
+    @abstractmethod
+    def initial(self) -> bool:
+        pass
+
+
+class InitialBoardPosition(AbcBoardPosition):
+    def initial(self) -> bool:
+        return True
+
+
+class BoardPosition(AbcBoardPosition):
 
     __VALID_SIZES = [9, 13, 19]
 
@@ -12,6 +24,9 @@ class BoardPosition:
         self.__check_size(size)
         self.__size = size
         self.__board_mask = {coord: EmptyField() for coord in product(range(size), range(size))}
+
+    def initial(self) -> bool:
+        return False
 
     @property
     def size(self):
@@ -25,7 +40,7 @@ class BoardPosition:
         for coord in self.__board_mask:
             self.__board_mask[coord] = EmptyField()
 
-    def at(self, coord):
+    def at(self, coord) -> Field:
         self.__check_coord(coord)
         return self.__board_mask[coord]
 

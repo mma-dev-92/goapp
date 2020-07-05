@@ -1,5 +1,5 @@
 from test.utils.base import BaseTestCaseClass
-from gologic.board.boardposition import BoardPosition
+from gologic.board.boardposition import BoardPosition, InitialBoardPosition
 from gologic.board.field import Color
 
 
@@ -31,6 +31,14 @@ class TestBoardPositionSimpleUse(BaseTestCaseClass):
         bp = self.random_nonempty_board()
         bp.clear()
         self.assertEqual(bp, self.empty_board(bp.size))
+
+    def test_init_board_position(self):
+        init_bp = InitialBoardPosition()
+        self.assertTrue(init_bp.initial())
+
+    def test_board_position_is_not_init(self):
+        bp = BoardPosition(self.random_size())
+        self.assertFalse(bp.initial())
 
     def test_after_initialization_board_is_empty(self):
         size = self.random_size()
