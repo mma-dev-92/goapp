@@ -1,11 +1,20 @@
-from gologic.board.boardposition import BoardPosition
+from gologic.board.boardposition import BoardPosition, InitialBoardPosition
 from gologic.board.color import Color
-from gologic.state.state import State, initial_state
+from gologic.state.state import State
 from test.utils.base import BaseTestCaseClass
 import random
 
 
 class TestSimpleUse(BaseTestCaseClass):
+
+    def test_prev_position_not_initial_now_position_initial(self):
+        random_size = self.random_size()
+        self.__test_init_raises_with_args(
+            RuntimeError,
+            prev_pos=BoardPosition(random_size),
+            now_pos=InitialBoardPosition(random_size)
+        )
+
     def test_init_invalid_type_board_position_argument(self):
         self.__test_init_raises_with_args(
             TypeError,

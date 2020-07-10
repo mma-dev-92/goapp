@@ -52,9 +52,14 @@ class State:
     @staticmethod
     def __check_board_positions(prev_pos, now_pos):
         if not isinstance(prev_pos, AbcBoardPosition) or not isinstance(now_pos, AbcBoardPosition):
-            raise TypeError("gologic.board.color.BoardPosition type required")
+            raise TypeError("gologic.board.color.AbcBoardPosition type required")
         if not prev_pos.size == now_pos.size:
             raise RuntimeError("prev_pos and now_pos have different size!")
+        if not prev_pos.initial() and now_pos.initial():
+            raise RuntimeError("now position is initial, but prev position is not!")
+
+    def next_state(self, coordinates, color):
+        pass
 
 
 def initial_state(size: int) -> State:

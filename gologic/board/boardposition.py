@@ -8,7 +8,6 @@ from gologic.board.field import EmptyField, NonEmptyField, Field
 from gologic.board.color import Color
 
 
-
 class IllegalMoveError(Exception):
     pass
 
@@ -23,7 +22,6 @@ class OccupiedFieldMoveError(IllegalMoveError):
 
 class IllegalPositionError(Exception):
     pass
-
 
 
 class AbcBoardPosition(ABC):
