@@ -57,6 +57,14 @@ class BaseTestCaseClass(unittest.TestCase):
     def random_size(self):
         return choice(self.sizes)
 
+    def two_random_sizes(self):
+        first_size = self.random_size()
+        second_size = self.random_size()
+        while second_size == first_size:
+            second_size = self.random_size()
+
+        return first_size, second_size
+
     @staticmethod
     def fill(bp, coordinates):
         for color, coordinates in coordinates.items():
