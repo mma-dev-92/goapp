@@ -18,6 +18,10 @@ class BoardPosition:
         return self.__size
 
     @property
+    def empty(self):
+        return all([field.is_empty() for field in self.__board_mask.values()])
+
+    @property
     def coordinates(self):
         return self.__board_mask.keys()
 

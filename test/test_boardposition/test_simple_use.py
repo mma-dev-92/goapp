@@ -32,6 +32,10 @@ class TestBoardPositionSimpleUse(BaseTestCaseClass):
         bp.clear()
         self.assertEqual(bp, self.empty_board(bp.size))
 
+    def test_empty(self):
+        bp = BoardPosition(self.random_size())
+        self.assertTrue(bp.empty)
+
     def test_after_initialization_board_is_empty(self):
         size = self.random_size()
         empty_board = self.empty_board(size)
@@ -87,13 +91,13 @@ class TestBoardPositionSimpleUse(BaseTestCaseClass):
         bp = self.empty_board(random_size)
         other = self.empty_board(self.other_sizes(random_size)[0])
         with self.assertRaises(ValueError):
-            bp == other
+            bp.__eq__(other)
 
     def test__eq__wrong_other_object_type(self):
         bp = self.random_size_empty_board()
         for other in [23, "other!"]:
             with self.assertRaises(TypeError, msg="__eq__: other object of type: {}, exception not thronw".format(type(other))):
-                bp == other
+                bp.__eq__(other)
 
     def test__eq__empty_objects(self):
         random_size = self.random_size()
