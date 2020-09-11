@@ -58,3 +58,15 @@ class State:
 
         if not prev_pos.empty and now_pos.empty:
             raise TypeError("if now_pos is empty, prev_pos have to be empty also")
+
+    def __eq__(self, other):
+        if not isinstance(other, State):
+            raise TypeError(
+                f"can not compare State object with {type(other)}"
+            )
+
+        pos_eq = self.position == other.position and self.prev_position == other.prev_position
+        captured_black_eq = self.captured_black_stones == other.captured_black_stones
+        captured_white_eq = self.captured_white_stones == other.captured_white_stones
+
+        return pos_eq and captured_black_eq and captured_white_eq
