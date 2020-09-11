@@ -2,6 +2,7 @@ import random
 
 from test.utils.base import BaseTestCaseClass
 from gologic.state.state import State
+from gologic.board.boardposition import BoardPosition
 
 
 class TestStateBasics(BaseTestCaseClass):
@@ -72,3 +73,33 @@ class TestStateBasics(BaseTestCaseClass):
         init_state = State.initial_state(size=self.random_size())
 
         self.assertTrue(init_state.captured_black_stones == 0 and init_state.captured_white_stones == 0)
+
+    def test__eq__(self):
+        empty_pos, rand_pos = self.__random_same_size_positions()
+        self.assertTrue(State(empty_pos, rand_pos) == State(empty_pos, rand_pos))
+
+    def test__eq__different_captured_black(self):
+        empty_pos, rand_pos = self.__random_same_size_positions()
+        self.assertFalse(State(empty_pos, rand_pos, b_captured=4) == State(empty_pos, rand_pos, b_captured=8))
+
+    def test__eq__different_captured_white(self):
+        empty_pos, rand_pos = self.__random_same_size_positions()
+        self.assertFalse(State(empty_pos, rand_pos, w_captured=4) == State(empty_pos, rand_pos, w_captured=11))
+
+    def test__eq__different_prev_pos(self):
+        empty_pos, rand_pos = self.__random_same_size_positions()
+        self.assertFalse(
+            State(empty_pos, rand_pos) == State(self.random_nonempty_board(size=rand_pos.size), rand_pos)
+        )
+
+    def test__eq__different_now_pos(self):
+        empty_pos, rand_pos = self.__random_same_size_positions()
+        self.assertFalse(
+            State(empty_pos, rand_pos) == State(empty_pos, self.random_nonempty_board(size=rand_pos.size))
+        )
+
+    def __random_same_size_positions(self):
+        random_pos = self.random_nonempty_board()
+        empty_pos = BoardPosition(size=random_pos.size)
+
+        return empty_pos, random_pos
