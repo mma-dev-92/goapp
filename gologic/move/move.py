@@ -27,7 +27,7 @@ class RepeatedPositionMoveError(IllegalPositionError):
     pass
 
 
-def next_state(state: State, coordinates: Tuple[int, int], color: Color):
+def next_state(state: State, coordinates: Tuple[int, int], color: Color) -> State:
     pass
 
 
