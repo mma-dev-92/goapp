@@ -18,6 +18,10 @@ class State:
         self.__w_captured = w_captured
 
     @property
+    def initial(self) -> bool:
+        return self.__prev_pos.empty and self.__now_pos.empty
+
+    @property
     def prev_position(self) -> BoardPosition:
         return self.__prev_pos
 
@@ -33,16 +37,12 @@ class State:
     def captured_white_stones(self):
         return self.__w_captured
 
-    @property
-    def initial(self) -> bool:
-        pass
-
     def legal_moves(self):
         pass
 
-    @staticmethod
-    def initial_state(self):
-        pass
+    @classmethod
+    def initial_state(cls, size):
+        return cls(prev_pos=BoardPosition(size), now_pos=BoardPosition(size))
 
     @staticmethod
     def __test_for_non_negativity(val, name):
