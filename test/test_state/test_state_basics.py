@@ -62,3 +62,13 @@ class TestStateBasics(BaseTestCaseClass):
 
         with self.assertRaises(ValueError):
             State(self.empty_board(rand_size), self.empty_board(rand_size), b_captured=-234, w_captured=4)
+
+    def test_initial_state_emptiness(self):
+        init_state = State.initial_state(size=self.random_size())
+
+        self.assertTrue(init_state.prev_position == init_state.position and init_state.prev_position.empty)
+
+    def test_initial_state_captured_stones(self):
+        init_state = State.initial_state(size=self.random_size())
+
+        self.assertTrue(init_state.captured_black_stones == 0 and init_state.captured_white_stones == 0)
