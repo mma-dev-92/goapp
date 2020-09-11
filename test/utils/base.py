@@ -75,8 +75,8 @@ class BaseTestCaseClass(unittest.TestCase):
     def other_sizes(self, size):
         return [s for s in self.sizes if not s == size]
 
-    def random_nonempty_board(self, non_empty_fields=50):
-        random_size = self.random_size()
+    def random_nonempty_board(self, non_empty_fields=50, size=None):
+        random_size = size if size else self.random_size()
         return self.fill(BoardPosition(random_size), self.random_coordinates(
             random_size, non_empty_fields // 2, non_empty_fields // 2))
 
